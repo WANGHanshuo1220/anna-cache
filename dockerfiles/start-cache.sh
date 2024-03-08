@@ -17,11 +17,10 @@
 cd $HYDRO_HOME/anna-cache
 mkdir -p conf
 
-IP=`ifconfig eth0 | grep 'inet' | grep -v inet6 | sed -e 's/^[ \t]*//' | cut -d' ' -f2`
+IP=`ifconfig ens5 | grep 'inet' | grep -v inet6 | sed -e 's/^[ \t]*//' | cut -d' ' -f2`
 
 # Download latest version of the code from relevant repository & branch -- if
 # none are specified, we use hydro-project/anna by default.
-git remote remove origin
 if [[ -z "$REPO_ORG" ]]; then
   REPO_ORG="hydro-project"
 fi
@@ -29,12 +28,6 @@ fi
 if [[ -z "$REPO_BRANCH" ]]; then
   REPO_BRANCH="master"
 fi
-
-git remote add origin https://github.com/$REPO_ORG/anna-cache
-git fetch -p origin
-git checkout -b brnch origin/$REPO_BRANCH
-
-cd build && make -j4 && cd ..
 
 # Do not start the server until conf/anna-config.yml has been copied onto this
 # pod -- if we start earlier, we won't now how to configure the system.
